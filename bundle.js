@@ -46609,7 +46609,9 @@
 	var renderer = detectWebGL() ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
 	renderer.setSize(width, height);
 
-	var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 20, 20), new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture(__webpack_require__(328)) }));
+	var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 10, 10), new THREE.MeshBasicMaterial({
+	  map: THREE.ImageUtils.loadTexture(__webpack_require__(328))
+	}));
 	sphere.scale.x = -1;
 	scene.add(sphere);
 
@@ -46626,22 +46628,32 @@
 	  requestAnimationFrame(render);
 	  renderer.render(scene, camera);
 	}
-	function onMouseWheel(event) {
-	  event.preventDefault();
 
-	  if (event.wheelDeltaY) {
-	    // WebKit
-	    camera.fov -= event.wheelDeltaY * 0.05;
-	  } else if (event.wheelDelta) {
-	    // Opera / IE9
-	    camera.fov -= event.wheelDelta * 0.05;
-	  } else if (event.detail) {
-	    // Firefox
-	    camera.fov += event.detail * 1.0;
-	  }
-	  camera.fov = Math.max(40, Math.min(100, camera.fov));
+	var update = function update() {
+	  var width = webglEl.offsetWidth;
+	  var height = webglEl.offsetHeight;
+	  camera.aspect = width / height;
 	  camera.updateProjectionMatrix();
-	}
+	  renderer.setSize(width, height);
+	};
+
+	window.addEventListener("orientationchange", update);
+	window.addEventListener("resize", update);
+
+	// function onMouseWheel(event) {
+	//   console.log(camera.fov);
+	//   event.preventDefault();
+	//
+	//   if (event.wheelDeltaY) { // WebKit
+	//     camera.fov -= event.wheelDeltaY * 0.05;
+	//   } else if (event.wheelDelta) { // Opera / IE9
+	//     camera.fov -= event.wheelDelta * 0.05;
+	//   } else if (event.detail) { // Firefox
+	//     camera.fov += event.detail * 1.0;
+	//   }
+	//   camera.fov = Math.max(40, Math.min(100, camera.fov));
+	//   camera.updateProjectionMatrix();
+	// }
 	// document.addEventListener('mousewheel', onMouseWheel, false);
 	// document.addEventListener('DOMMouseScroll', onMouseWheel, false);
 
@@ -89571,7 +89583,7 @@
 /* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__.p + "896f2771038ba97709941144211d86db.png";
+	module.exports = __webpack_require__.p + "9bf988ddd03a0fa86c526df06c75dd9d.jpg";
 
 /***/ }
 /******/ ]);

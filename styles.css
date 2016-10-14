@@ -28,7 +28,7 @@ main h6 {
   }
 }
 
-.container {
+#canvas {
   min-width: 100vw;
   min-height: 50vh;
 }
