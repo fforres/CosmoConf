@@ -23,7 +23,7 @@ var renderer = detectWebGL()
   : new THREE.CanvasRenderer();
 renderer.setSize(width, height);
 
-var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 20, 20), new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture(require('../imgs/universe_360.png'))}));
+var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 20, 20), new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture(require('../imgs/360_7.jpg'))}));
 sphere.scale.x = -1;
 scene.add(sphere);
 
@@ -40,18 +40,31 @@ function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
-function onMouseWheel(event) {
-  event.preventDefault();
 
-  if (event.wheelDeltaY) { // WebKit
-    camera.fov -= event.wheelDeltaY * 0.05;
-  } else if (event.wheelDelta) { // Opera / IE9
-    camera.fov -= event.wheelDelta * 0.05;
-  } else if (event.detail) { // Firefox
-    camera.fov += event.detail * 1.0;
-  }
-  camera.fov = Math.max(40, Math.min(100, camera.fov));
+const update = () => {
+  const width = webglEl.offsetWidth;
+  const height = webglEl.offsetHeight;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  renderer.setSize( width, height );
 }
+
+window.addEventListener("orientationchange", update);
+window.addEventListener("resize", update);
+
+// function onMouseWheel(event) {
+//   console.log(camera.fov);
+//   event.preventDefault();
+//
+//   if (event.wheelDeltaY) { // WebKit
+//     camera.fov -= event.wheelDeltaY * 0.05;
+//   } else if (event.wheelDelta) { // Opera / IE9
+//     camera.fov -= event.wheelDelta * 0.05;
+//   } else if (event.detail) { // Firefox
+//     camera.fov += event.detail * 1.0;
+//   }
+//   camera.fov = Math.max(40, Math.min(100, camera.fov));
+//   camera.updateProjectionMatrix();
+// }
 // document.addEventListener('mousewheel', onMouseWheel, false);
 // document.addEventListener('DOMMouseScroll', onMouseWheel, false);
