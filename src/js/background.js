@@ -23,7 +23,9 @@ var renderer = detectWebGL()
   : new THREE.CanvasRenderer();
 renderer.setSize(width, height);
 
-var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 20, 20), new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture(require('../imgs/360_7.jpg'))}));
+var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 10, 10), new THREE.MeshBasicMaterial({
+  map: THREE.ImageUtils.loadTexture(require('../imgs/360_7.jpg'))
+}));
 sphere.scale.x = -1;
 scene.add(sphere);
 
@@ -46,7 +48,7 @@ const update = () => {
   const height = webglEl.offsetHeight;
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize( width, height );
+  renderer.setSize(width, height);
 }
 
 window.addEventListener("orientationchange", update);
