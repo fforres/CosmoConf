@@ -59,16 +59,16 @@ const update = () => {
 window.addEventListener("resize", update);
 window.addEventListener("orientationchange", update);
 
-if (modernizr.hasEvent('deviceOrientation')) {
-  window.addEventListener('deviceorientation', (event) => {
-    alpha = Math.round(event.alpha);
-    beta = Math.round(event.beta);
-    gamma = Math.round(event.gamma);
-    document.getElementById('alpha').innerHTML(alpha);
-    document.getElementById('beta').innerHTML(beta);
-    document.getElementById('gamma').innerHTML(gamma);
-  }, true);
-}
+
+window.addEventListener('deviceorientation', (event) => {
+  console.log(event);
+  const alpha = Math.round(event.alpha);
+  const beta = Math.round(event.beta);
+  const gamma = Math.round(event.gamma);
+  document.getElementById('alpha').innerHTML = alpha;
+  document.getElementById('beta').innerHTML = beta;
+  document.getElementById('gamma').innerHTML = gamma;
+});
 
 
 document.getElementById('reset').addEventListener('click', (event) => {
