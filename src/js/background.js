@@ -57,6 +57,7 @@ const update = () => {
 }
 
 window.addEventListener("resize", update);
+window.addEventListener("orientationchange", update);
 
 window.addEventListener('deviceorientation', (event) => {
   alpha = Math.round(event.alpha);
