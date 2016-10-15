@@ -26,7 +26,7 @@ module.exports = {
       // filename: path.resolve(__dirname, 'src', 'build', 'index.html'),
       template: path.resolve(__dirname, 'src', 'template', 'index.hbs')
     }),
-    new ExtractTextPlugin('styles.css')
+    new ExtractTextPlugin('styles.css'),
   ],
   module: {
     loaders: [
@@ -55,8 +55,16 @@ module.exports = {
         query: {
           partialDirs: [path.join(__dirname, 'src', 'template')]
         }
+      }, {
+        test: /\.modernizrrc$/,
+        loader: "modernizr"
       }
     ]
   },
-  postcss: postCSSConfig
+  postcss: postCSSConfig,
+  resolve: {
+    alias: {
+      modernizr$: path.resolve(__dirname, '.modernizrrc')
+    }
+  }
 };

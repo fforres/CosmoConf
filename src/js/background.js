@@ -1,14 +1,8 @@
 import * as THREE from 'three';
+import modernizr from 'modernizr'
 import orbitControls from 'three-orbit-controls';
-const OrbitControls = orbitControls(THREE);
 
-const detectWebGL = () => {
-  var canvas = document.createElement("canvas");
-  // Get WebGLRenderingContext from canvas element.
-  var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-  // Report the result.
-  return (gl && gl instanceof WebGLRenderingContext)
-}
+const OrbitControls = orbitControls(THREE);
 
 const webglEl = document.getElementById('canvas');
 const width = webglEl.offsetWidth;
@@ -18,7 +12,7 @@ var scene = new THREE.Scene();
 
 var camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
 camera.position.x = 0.1;
-var renderer = detectWebGL()
+var renderer = modernizr.webgl
   ? new THREE.WebGLRenderer()
   : new THREE.CanvasRenderer();
 renderer.setSize(width, height);
@@ -29,30 +23,69 @@ var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 10, 10), new THREE.Mes
 sphere.scale.x = -1;
 scene.add(sphere);
 
-var controls = new OrbitControls(camera);
-
+// Setting Orbit Controls
+var controls = new OrbitControls(camera, webglEl);
 controls.noPan = true;
 controls.noZoom = true;
 controls.autoRotate = true;
+controls.enableKeys = true;
+controls.enableDamping = true;
+controls.dampingFactor = 0.25;
+controls.enableZoom = false;
 controls.autoRotateSpeed = 0.1;
-webglEl.appendChild(renderer.domElement);
-render();
-function render() {
+function updateControls() {
   controls.update();
+}
+
+controls.addEventListener('change', updateControls);
+
+webglEl.appendChild(renderer.domElement);
+
+function render() {
+  updateControls();
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
+render();
 
 const update = () => {
   const width = webglEl.offsetWidth;
   const height = webglEl.offsetHeight;
+  renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(width, height);
 }
 
-window.addEventListener("orientationchange", update);
 window.addEventListener("resize", update);
+
+window.addEventListener('deviceorientation', (event) => {
+  alpha = Math.round(event.alpha);
+  beta = Math.round(event.beta);
+  gamma = Math.round(event.gamma);
+  console.log(alpha, beta, gamma);
+});
+
+
+document.getElementById('reset').addEventListener('click', (event) => {
+  controls.reset();
+});
+console.log(controls);
+document.getElementById('up').addEventListener('click', (e) => {
+  controls.position0.set( 0, controls.position0.y + 0.5, 0 ); // set a new desired position
+  controls.target0.set( 0, 0, 0 ); // set a new target
+  controls.update();
+})
+
+
+// controls.target0.set( 0, 0, 0 ); // set a new target
+// controls.up0.set( 0, 1, 0 ); // set a new up vector
+// controls.reset();
+
+
+// controls.position0.set( 0, 0, 10 ); // set a new desired position
+// controls.target0.set( 0, 0, 0 ); // set a new target
+// controls.up0.set( 0, 1, 0 ); // set a new up vector
+// controls.reset();
 
 // function onMouseWheel(event) {
 //   console.log(camera.fov);
