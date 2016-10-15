@@ -46648,13 +46648,14 @@
 	window.addEventListener("orientationchange", update);
 
 	window.addEventListener('deviceorientation', function (event) {
-	  alpha = Math.round(event.alpha);
-	  beta = Math.round(event.beta);
-	  gamma = Math.round(event.gamma);
-	  document.getElementById('alpha').innerHTML(alpha);
-	  document.getElementById('beta').innerHTML(beta);
-	  document.getElementById('gamma').innerHTML(gamma);
-	}, true);
+	  console.log(event);
+	  var alpha = Math.round(event.alpha);
+	  var beta = Math.round(event.beta);
+	  var gamma = Math.round(event.gamma);
+	  document.getElementById('alpha').innerHTML = alpha;
+	  document.getElementById('beta').innerHTML = beta;
+	  document.getElementById('gamma').innerHTML = gamma;
+	});
 
 	document.getElementById('reset').addEventListener('click', function (event) {
 	  controls.reset();
