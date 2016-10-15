@@ -28,11 +28,8 @@ var controls = new OrbitControls(camera, webglEl);
 controls.noPan = true;
 controls.noZoom = true;
 controls.autoRotate = true;
-controls.enableKeys = true;
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
 controls.enableZoom = false;
-controls.autoRotateSpeed = 0.1;
+controls.autoRotateSpeed = 0.3;
 function updateControls() {
   controls.update();
 }
