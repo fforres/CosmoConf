@@ -46647,17 +46647,20 @@
 	window.addEventListener("resize", update);
 	window.addEventListener("orientationchange", update);
 
-	window.addEventListener('deviceorientation', function (event) {
-	  alpha = Math.round(event.alpha);
-	  beta = Math.round(event.beta);
-	  gamma = Math.round(event.gamma);
-	  console.log(alpha, beta, gamma);
-	});
+	if (_modernizr2.default.hasEvent('deviceOrientation')) {
+	  window.addEventListener('deviceorientation', function (event) {
+	    alpha = Math.round(event.alpha);
+	    beta = Math.round(event.beta);
+	    gamma = Math.round(event.gamma);
+	    document.getElementById('alpha').innerHTML(alpha);
+	    document.getElementById('beta').innerHTML(beta);
+	    document.getElementById('gamma').innerHTML(gamma);
+	  }, true);
+	}
 
 	document.getElementById('reset').addEventListener('click', function (event) {
 	  controls.reset();
 	});
-	console.log(controls);
 	document.getElementById('up').addEventListener('click', function (e) {
 	  controls.position0.set(0, controls.position0.y + 0.5, 0); // set a new desired position
 	  controls.target0.set(0, 0, 0); // set a new target
