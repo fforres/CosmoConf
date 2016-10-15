@@ -46580,7 +46580,11 @@
 
 	var THREE = _interopRequireWildcard(_three);
 
-	var _threeOrbitControls = __webpack_require__(327);
+	var _modernizr = __webpack_require__(327);
+
+	var _modernizr2 = _interopRequireDefault(_modernizr);
+
+	var _threeOrbitControls = __webpack_require__(328);
 
 	var _threeOrbitControls2 = _interopRequireDefault(_threeOrbitControls);
 
@@ -46590,14 +46594,6 @@
 
 	var OrbitControls = (0, _threeOrbitControls2.default)(THREE);
 
-	var detectWebGL = function detectWebGL() {
-	  var canvas = document.createElement("canvas");
-	  // Get WebGLRenderingContext from canvas element.
-	  var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-	  // Report the result.
-	  return gl && gl instanceof WebGLRenderingContext;
-	};
-
 	var webglEl = document.getElementById('canvas');
 	var width = webglEl.offsetWidth;
 	var height = webglEl.offsetHeight;
@@ -46606,39 +46602,76 @@
 
 	var camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
 	camera.position.x = 0.1;
-	var renderer = detectWebGL() ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
+	var renderer = _modernizr2.default.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
 	renderer.setSize(width, height);
 
 	var sphere = new THREE.Mesh(new THREE.SphereGeometry(100, 10, 10), new THREE.MeshBasicMaterial({
-	  map: THREE.ImageUtils.loadTexture(__webpack_require__(328))
+	  map: THREE.ImageUtils.loadTexture(__webpack_require__(329))
 	}));
 	sphere.scale.x = -1;
 	scene.add(sphere);
 
-	var controls = new OrbitControls(camera);
-
+	// Setting Orbit Controls
+	var controls = new OrbitControls(camera, webglEl);
 	controls.noPan = true;
 	controls.noZoom = true;
 	controls.autoRotate = true;
+	controls.enableKeys = true;
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.25;
+	controls.enableZoom = false;
 	controls.autoRotateSpeed = 0.1;
-	webglEl.appendChild(renderer.domElement);
-	render();
-	function render() {
+	function updateControls() {
 	  controls.update();
+	}
+
+	controls.addEventListener('change', updateControls);
+
+	webglEl.appendChild(renderer.domElement);
+
+	function render() {
+	  updateControls();
 	  requestAnimationFrame(render);
 	  renderer.render(scene, camera);
 	}
+	render();
 
 	var update = function update() {
 	  var width = webglEl.offsetWidth;
 	  var height = webglEl.offsetHeight;
+	  renderer.setSize(width, height);
 	  camera.aspect = width / height;
 	  camera.updateProjectionMatrix();
-	  renderer.setSize(width, height);
 	};
 
-	window.addEventListener("orientationchange", update);
 	window.addEventListener("resize", update);
+
+	window.addEventListener('deviceorientation', function (event) {
+	  alpha = Math.round(event.alpha);
+	  beta = Math.round(event.beta);
+	  gamma = Math.round(event.gamma);
+	  console.log(alpha, beta, gamma);
+	});
+
+	document.getElementById('reset').addEventListener('click', function (event) {
+	  controls.reset();
+	});
+	console.log(controls);
+	document.getElementById('up').addEventListener('click', function (e) {
+	  controls.position0.set(0, controls.position0.y + 0.5, 0); // set a new desired position
+	  controls.target0.set(0, 0, 0); // set a new target
+	  controls.update();
+	});
+
+	// controls.target0.set( 0, 0, 0 ); // set a new target
+	// controls.up0.set( 0, 1, 0 ); // set a new up vector
+	// controls.reset();
+
+
+	// controls.position0.set( 0, 0, 10 ); // set a new desired position
+	// controls.target0.set( 0, 0, 0 ); // set a new target
+	// controls.up0.set( 0, 1, 0 ); // set a new up vector
+	// controls.reset();
 
 	// function onMouseWheel(event) {
 	//   console.log(camera.fov);
@@ -88458,6 +88491,17 @@
 /* 327 */
 /***/ function(module, exports) {
 
+	;(function(window){
+	/*! modernizr 3.3.1 (Custom Build) | MIT *
+	 * http://modernizr.com/download/?-touchevents-webgl-setclasses !*/
+	!function(e,n,t){function o(e,n){return typeof e===n}function s(){var e,n,t,s,a,i,r;for(var l in f)if(f.hasOwnProperty(l)){if(e=[],n=f[l],n.name&&(e.push(n.name.toLowerCase()),n.options&&n.options.aliases&&n.options.aliases.length))for(t=0;t<n.options.aliases.length;t++)e.push(n.options.aliases[t].toLowerCase());for(s=o(n.fn,"function")?n.fn():n.fn,a=0;a<e.length;a++)i=e[a],r=i.split("."),1===r.length?Modernizr[r[0]]=s:(!Modernizr[r[0]]||Modernizr[r[0]]instanceof Boolean||(Modernizr[r[0]]=new Boolean(Modernizr[r[0]])),Modernizr[r[0]][r[1]]=s),c.push((s?"":"no-")+r.join("-"))}}function a(e){var n=p.className,t=Modernizr._config.classPrefix||"";if(u&&(n=n.baseVal),Modernizr._config.enableJSClass){var o=new RegExp("(^|\\s)"+t+"no-js(\\s|$)");n=n.replace(o,"$1"+t+"js$2")}Modernizr._config.enableClasses&&(n+=" "+t+e.join(" "+t),u?p.className.baseVal=n:p.className=n)}function i(){return"function"!=typeof n.createElement?n.createElement(arguments[0]):u?n.createElementNS.call(n,"http://www.w3.org/2000/svg",arguments[0]):n.createElement.apply(n,arguments)}function r(){var e=n.body;return e||(e=i(u?"svg":"body"),e.fake=!0),e}function l(e,t,o,s){var a,l,f,d,c="modernizr",u=i("div"),h=r();if(parseInt(o,10))for(;o--;)f=i("div"),f.id=s?s[o]:c+(o+1),u.appendChild(f);return a=i("style"),a.type="text/css",a.id="s"+c,(h.fake?h:u).appendChild(a),h.appendChild(u),a.styleSheet?a.styleSheet.cssText=e:a.appendChild(n.createTextNode(e)),u.id=c,h.fake&&(h.style.background="",h.style.overflow="hidden",d=p.style.overflow,p.style.overflow="hidden",p.appendChild(h)),l=t(u,e),h.fake?(h.parentNode.removeChild(h),p.style.overflow=d,p.offsetHeight):u.parentNode.removeChild(u),!!l}var f=[],d={_version:"3.3.1",_config:{classPrefix:"",enableClasses:!0,enableJSClass:!0,usePrefixes:!0},_q:[],on:function(e,n){var t=this;setTimeout(function(){n(t[e])},0)},addTest:function(e,n,t){f.push({name:e,fn:n,options:t})},addAsyncTest:function(e){f.push({name:null,fn:e})}},Modernizr=function(){};Modernizr.prototype=d,Modernizr=new Modernizr;var c=[],p=n.documentElement,u="svg"===p.nodeName.toLowerCase();Modernizr.addTest("webgl",function(){var n=i("canvas"),t="probablySupportsContext"in n?"probablySupportsContext":"supportsContext";return t in n?n[t]("webgl")||n[t]("experimental-webgl"):"WebGLRenderingContext"in e});var h=d._config.usePrefixes?" -webkit- -moz- -o- -ms- ".split(" "):[];d._prefixes=h;var m=d.testStyles=l;Modernizr.addTest("touchevents",function(){var t;if("ontouchstart"in e||e.DocumentTouch&&n instanceof DocumentTouch)t=!0;else{var o=["@media (",h.join("touch-enabled),("),"heartz",")","{#modernizr{top:9px;position:absolute}}"].join("");m(o,function(e){t=9===e.offsetTop})}return t}),s(),a(c),delete d.addTest,delete d.addAsyncTest;for(var v=0;v<Modernizr._q.length;v++)Modernizr._q[v]();e.Modernizr=Modernizr}(window,document);
+	module.exports = window.Modernizr;
+	})(window);
+
+/***/ },
+/* 328 */
+/***/ function(module, exports) {
+
 	module.exports = function(THREE) {
 		var MOUSE = THREE.MOUSE
 		if (!MOUSE)
@@ -89580,7 +89624,7 @@
 
 
 /***/ },
-/* 328 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "9bf988ddd03a0fa86c526df06c75dd9d.jpg";
