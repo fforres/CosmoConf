@@ -46645,6 +46645,7 @@
 	};
 
 	window.addEventListener("resize", update);
+	window.addEventListener("orientationchange", update);
 
 	window.addEventListener('deviceorientation', function (event) {
 	  alpha = Math.round(event.alpha);
